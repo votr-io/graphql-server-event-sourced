@@ -2,10 +2,12 @@ import { IMain, IDatabase } from 'pg-promise';
 import * as pgPromise from 'pg-promise';
 import { ENV } from './env';
 import { isObject } from 'util';
+import * as express from 'express';
+import * as cors from 'cors';
 
 const uuid = require('uuid/v4');
 
-const state: Record<string, Todo> = {};
+const todos: Record<string, Todo> = {};
 
 const pgp: IMain = pgPromise({
   // Initialization Options
@@ -13,11 +15,20 @@ const pgp: IMain = pgPromise({
 
 export const db: IDatabase<any> = pgp(ENV.DATABASE_URL);
 
-db.connect().then(connection => {
+db.connect().then(async connection => {
+  console.log('getting past events....');
+
+  const events: DbEvent[] = await connection.any('SELECT * FROM events;');
+  events.forEach(event => {
+    const todo = event.data as Todo;
+    todos[todo.id] = todo;
+  });
+
+  console.log('listening for new events....');
   connection.client.on('notification', msg => {
-    console.log('notification received', msg);
-    const todo: Todo = JSON.parse(msg.payload);
-    state[todo.id] = todo;
+    const event = JSON.parse(msg.payload);
+    const todo: Todo = event.data;
+    todos[todo.id] = todo;
   });
   connection.none('LISTEN new_event');
 });
@@ -59,12 +70,12 @@ setInterval(async () => {
     data: todo,
   };
 
-  console.log(`creating todo ${todo.id}...`);
+  console.log(`creating todo ${todo.id}`);
 
   const [columns, values] = columnsAndValues(todoCreatedEvent);
   const query = `INSERT INTO events VALUES(${columns.join(', ')});`;
   await db.none(query, values);
-}, 2000);
+}, 2);
 
 function columnsAndValues(o: Object): [string[], Object] {
   const keys = Object.keys(o);
@@ -76,6 +87,18 @@ function columnsAndValues(o: Object): [string[], Object] {
   return [keys.map(key => `$(${key})`), values];
 }
 
-setInterval(() => {
-  console.log(state);
-}, 10000);
+const app = express();
+app.use(cors());
+
+app.use('/todos/:id', (req, res) => {
+  const id = req.params.id;
+  res.json({ todo: todos[id] });
+});
+
+app.use('/todos', (req, res) => {
+  res.json({ todos });
+});
+
+app.listen({ port: ENV.PORT }, () => {
+  console.log(`Apollo Server listening at :${ENV.PORT}...`);
+});
