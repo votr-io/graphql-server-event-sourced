@@ -2,13 +2,12 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- table to store our events
 CREATE TABLE events (
-    id UUID PRIMARY KEY NOT NULL,
+    id BIGSERIAL PRIMARY KEY NOT NULL,
     event_type VARCHAR (80) NOT NULL,
     aggregate_type VARCHAR (80) NOT NULL,
-    aggregate_id UUID NOT NULL,
-    aggregate_new BOOLEAN NOT NULL,
+    aggregate_id VARCHAR (80) NOT NULL,
     date_created TIMESTAMP WITH TIME ZONE DEFAULT(now() at time zone 'utc'),
-    transaction_id UUID NOT NULL,
+    actor VARCHAR (80) NOT NULL,
     data jsonb NOT NULL
 );
 

@@ -1,7 +1,6 @@
-import { Events } from './Election/events';
-import { project, state } from './Election/ReadModel';
+import { Events } from './events';
+import { project, state } from './ReadModel';
 import { from } from 'rxjs';
-import { postgresEventStore, WithoutId } from './Election/EventStore';
 const uuid = require('uuid/v4');
 
 const aggregate_type = 'election';
@@ -11,8 +10,9 @@ const actor = 'test-user';
 
 const id = aggregate_id;
 
-const events: WithoutId<Events>[] = [
+const events: Events[] = [
   {
+    id: uuid(),
     event_type: 'election_created',
     aggregate_type,
     aggregate_id,
@@ -37,6 +37,7 @@ const events: WithoutId<Events>[] = [
     },
   },
   {
+    id: uuid(),
     event_type: 'election_name_changed',
     aggregate_type,
     aggregate_id,
@@ -48,6 +49,7 @@ const events: WithoutId<Events>[] = [
     },
   },
   {
+    id: uuid(),
     event_type: 'election_started',
     aggregate_type,
     aggregate_id,
@@ -58,32 +60,9 @@ const events: WithoutId<Events>[] = [
     },
   },
 ];
-setInterval(() => {
-  console.log('creating a round of events...');
-  events.forEach(event => {
-    postgresEventStore.create(event);
-  });
-}, 2000);
 
-// postgresEventStore.stream().subscribe(console.log);
-project(postgresEventStore.stream());
-
-import * as express from 'express';
-import * as cors from 'cors';
-import { ENV } from './env';
-
-const app = express();
-app.use(cors());
-
-app.use('/election/:id', (req, res) => {
-  const id = req.params.id;
-  res.json({ election: state[id] });
-});
-
-app.use('/todos', (req, res) => {
-  res.json({ state });
-});
-
-app.listen({ port: ENV.PORT }, () => {
-  console.log(`Apollo Server listening at :${ENV.PORT}...`);
+test('simple single election', () => {
+  project(from(events));
+  expect(state[id].name).toBe('the name has been updated');
+  expect(state[id].status).toBe('OPEN');
 });
