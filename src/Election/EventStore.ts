@@ -38,10 +38,10 @@ export const postgresEventStore: EventStore = {
   stream: () => {
     return new Observable<Events>(observer => {
       //This is a crazy naive implimentation of how to stream events
-      //this is not accounting for events that are being created while getting past events
+      //it's not accounting for events that are being created while getting past events
       db.connect().then(async connection => {
         console.log('getting past events....');
-        const events = await connection.any('SELECT * FROM events;');
+        const events = await connection.any('SELECT * FROM events ORDER BY id ASC;');
         events.forEach(event => observer.next(event));
 
         console.log('listening for new events....');
@@ -57,6 +57,9 @@ export const postgresEventStore: EventStore = {
 };
 
 export async function getElection(id: string): Promise<Election> {
-  const events = await db.any('SELECT * FROM events WHERE aggregate_id = $1;', [id]);
+  const events = await db.any(
+    'SELECT * FROM events WHERE aggregate_id = $1  ORDER BY id ASC;',
+    [id]
+  );
   return projectElection(events);
 }
