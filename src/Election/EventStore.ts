@@ -1,6 +1,8 @@
 import { Observable } from 'rxjs';
 import { Events } from './events';
 import { db } from '../db';
+import { Election } from './types';
+import { projectElection } from './Election';
 
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 export type WithoutId<T> = Omit<T, 'id'>;
@@ -53,3 +55,8 @@ export const postgresEventStore: EventStore = {
     });
   },
 };
+
+export async function getElection(id: string): Promise<Election> {
+  const events = await db.any('SELECT * FROM events WHERE aggregate_id = $1;', [id]);
+  return projectElection(events);
+}

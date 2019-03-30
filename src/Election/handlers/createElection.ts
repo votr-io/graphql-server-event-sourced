@@ -1,11 +1,9 @@
-import { Events } from './../events';
-import { Context, context } from '../../context';
+import { Context } from '../../context';
 import { Election } from '../types';
 import lodash = require('lodash');
 import { ElectionForm, Handler } from '../service';
 import { ElectionCreated } from '../events';
-import { WithoutId } from '../EventStore';
-import { waitForEvent } from '../ReadModel';
+import { WithoutId, getElection } from '../EventStore';
 
 const uuid = require('uuid/v4');
 
@@ -18,7 +16,7 @@ export const createElectionHandler: Handler<
   Promise<Election>
 > = {
   validate,
-  handleRequest: async ({ userStore, eventStore, inMemoryElections }, input) => {
+  handleRequest: async ({ userStore, eventStore }, input) => {
     const { name, description, candidates } = input.electionForm;
     const { email } = input;
 
@@ -49,10 +47,8 @@ export const createElectionHandler: Handler<
       },
     };
 
-    await waitForEvent(await eventStore.create(event));
-    return inMemoryElections[id];
-
-    // return inMemoryElections[id];
+    await eventStore.create(event);
+    return await getElection(id);
   },
 };
 
