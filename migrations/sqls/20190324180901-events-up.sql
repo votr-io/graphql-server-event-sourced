@@ -29,3 +29,25 @@ CREATE TRIGGER notify_new_event
   ON "events"
   FOR EACH ROW
   EXECUTE PROCEDURE notify_new_event();
+
+
+
+
+-- table for users
+
+CREATE TYPE user_type AS ENUM ('WEAK');
+
+CREATE TABLE users (
+    id UUID PRIMARY KEY NOT NULL,
+    email VARCHAR (256) UNIQUE NOT NULL,
+    date_created TIMESTAMP WITH TIME ZONE DEFAULT(now() at time zone 'utc'),
+    type user_type NOT NULL
+);
+
+
+--table for ballots
+
+CREATE TABLE ballots (
+    election_id UUID NOT NULL,
+    ballot VARCHAR (800) NOT NULL
+);

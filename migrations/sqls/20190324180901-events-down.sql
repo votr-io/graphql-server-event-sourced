@@ -3,3 +3,8 @@ DROP TRIGGER IF EXISTS notify_new_event ON events;
 DROP FUNCTION IF EXISTS notify_new_event;
 
 DROP TABLE IF EXISTS events;
+
+DROP TABLE IF EXISTS users;
+DROP TYPE IF EXISTS user_type;
+
+DROP TABLE IF EXISTS ballots;

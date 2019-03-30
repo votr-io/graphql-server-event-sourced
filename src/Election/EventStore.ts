@@ -1,9 +1,6 @@
 import { Observable } from 'rxjs';
-import { isObject } from 'util';
-import { IMain, IDatabase } from 'pg-promise';
-import * as pgPromise from 'pg-promise';
-import { ENV } from '../env';
 import { Events } from './events';
+import { db } from '../db';
 
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 export type WithoutId<T> = Omit<T, 'id'>;
@@ -19,28 +16,27 @@ export interface Event {
 }
 
 export interface EventStore {
-  create(event: WithoutId<Events>): Promise<void>;
+  create(event: WithoutId<Events>): Promise<number>;
   stream(): Observable<Events>;
 }
 
-const pgp: IMain = pgPromise({
-  // Initialization Options
-});
-
-export const db: IDatabase<any> = pgp(ENV.DATABASE_URL);
-
 export const postgresEventStore: EventStore = {
   create: async event => {
-    const [columns, values] = columnsAndValues(event);
-    const query = `INSERT INTO events(event_type, aggregate_type, aggregate_id, date_created, actor, data) VALUES(${columns.join(
-      ', '
-    )});`;
-    await db.none(query, values);
+    const query = `INSERT INTO events(event_type, aggregate_type, aggregate_id, date_created, actor, data) VALUES($1, $2, $3, $4, $5, $6) RETURNING id;`;
+    const { id } = await db.one(query, [
+      event.event_type,
+      event.aggregate_type,
+      event.aggregate_id,
+      event.date_created,
+      event.actor,
+      JSON.stringify(event.data),
+    ]);
+    return id;
   },
   stream: () => {
     return new Observable<Events>(observer => {
       //This is a crazy naive implimentation of how to stream events
-
+      //this is not accounting for events that are being created while getting past events
       db.connect().then(async connection => {
         console.log('getting past events....');
         const events = await connection.any('SELECT * FROM events;');
@@ -57,14 +53,3 @@ export const postgresEventStore: EventStore = {
     });
   },
 };
-
-//this is pretty dumb
-function columnsAndValues(o: Object): [string[], Object] {
-  const keys = Object.keys(o);
-  const values = keys.reduce((acc, key) => {
-    const value = o[key];
-    acc[key] = isObject(value) ? JSON.stringify(value) : value;
-    return acc;
-  }, {});
-  return [keys.map(key => `$(${key})`), values];
-}

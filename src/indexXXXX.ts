@@ -1,6 +1,7 @@
-import { Events } from './events';
-import { project, inMemoryElections } from './ReadModel';
+import { Events } from './Election/events';
+import { project, inMemoryElections } from './Election/ReadModel';
 import { from } from 'rxjs';
+import { postgresEventStore, WithoutId } from './Election/EventStore';
 const uuid = require('uuid/v4');
 
 const aggregate_type = 'election';
@@ -10,9 +11,8 @@ const actor = 'test-user';
 
 const id = aggregate_id;
 
-const events: Events[] = [
+const events: WithoutId<Events>[] = [
   {
-    id: uuid(),
     event_type: 'election_created',
     aggregate_type,
     aggregate_id,
@@ -37,7 +37,6 @@ const events: Events[] = [
     },
   },
   {
-    id: uuid(),
     event_type: 'election_name_changed',
     aggregate_type,
     aggregate_id,
@@ -49,7 +48,6 @@ const events: Events[] = [
     },
   },
   {
-    id: uuid(),
     event_type: 'election_started',
     aggregate_type,
     aggregate_id,
@@ -60,9 +58,32 @@ const events: Events[] = [
     },
   },
 ];
+setInterval(() => {
+  console.log('creating a round of events...');
+  events.forEach(event => {
+    postgresEventStore.create(event);
+  });
+}, 2000);
 
-test('simple single election', () => {
-  project(from(events));
-  expect(inMemoryElections[id].name).toBe('the name has been updated');
-  expect(inMemoryElections[id].status).toBe('OPEN');
+// postgresEventStore.stream().subscribe(console.log);
+project(postgresEventStore.stream());
+
+import * as express from 'express';
+import * as cors from 'cors';
+import { ENV } from './env';
+
+const app = express();
+app.use(cors());
+
+app.use('/election/:id', (req, res) => {
+  const id = req.params.id;
+  res.json({ election: inMemoryElections[id] });
+});
+
+app.use('/todos', (req, res) => {
+  res.json({ inMemoryElections });
+});
+
+app.listen({ port: ENV.PORT }, () => {
+  console.log(`Apollo Server listening at :${ENV.PORT}...`);
 });

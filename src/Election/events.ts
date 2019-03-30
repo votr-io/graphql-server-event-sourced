@@ -1,8 +1,7 @@
-import { EventStore } from './EventStore';
 import { Candidate } from './types';
 import { Event } from './EventStore';
 
-interface ElectionCreated extends Event {
+export interface ElectionCreated extends Event {
   event_type: 'election_created';
   aggregate_type: 'election';
   data: {
@@ -13,7 +12,7 @@ interface ElectionCreated extends Event {
   };
 }
 
-interface ElectionNameChanged extends Event {
+export interface ElectionNameChanged extends Event {
   event_type: 'election_name_changed';
   aggregate_type: 'election';
   data: {
@@ -22,7 +21,7 @@ interface ElectionNameChanged extends Event {
   };
 }
 
-interface ElectionDescriptionChanged extends Event {
+export interface ElectionDescriptionChanged extends Event {
   event_type: 'election_description_changed';
   aggregate_type: 'election';
   data: {
@@ -31,7 +30,7 @@ interface ElectionDescriptionChanged extends Event {
   };
 }
 
-interface ElectionCandidatesChanged extends Event {
+export interface ElectionCandidatesChanged extends Event {
   event_type: 'election_candidates_changed';
   aggregate_type: 'election';
   data: {
@@ -40,7 +39,7 @@ interface ElectionCandidatesChanged extends Event {
   };
 }
 
-interface ElectionStarted extends Event {
+export interface ElectionStarted extends Event {
   event_type: 'election_started';
   aggregate_type: 'election';
   data: {
@@ -48,7 +47,7 @@ interface ElectionStarted extends Event {
   };
 }
 
-interface ElectionStopped extends Event {
+export interface ElectionStopped extends Event {
   event_type: 'election_stopped';
   aggregate_type: 'election';
   data: {
