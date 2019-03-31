@@ -20,6 +20,7 @@ export interface Event {
 export interface EventStore {
   create(event: WithoutId<Events>): Promise<number>;
   stream(): Observable<Events>;
+  getElection(id: string): Promise<Election>;
 }
 
 export const postgresEventStore: EventStore = {
@@ -54,12 +55,11 @@ export const postgresEventStore: EventStore = {
       });
     });
   },
+  getElection: async id => {
+    const events = await db.any(
+      'SELECT * FROM events WHERE aggregate_id = $1  ORDER BY id ASC;',
+      [id]
+    );
+    return projectElection(events);
+  },
 };
-
-export async function getElection(id: string): Promise<Election> {
-  const events = await db.any(
-    'SELECT * FROM events WHERE aggregate_id = $1  ORDER BY id ASC;',
-    [id]
-  );
-  return projectElection(events);
-}

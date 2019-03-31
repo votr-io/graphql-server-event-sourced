@@ -134,7 +134,6 @@ export const typeDefs = gql`
     id: ID!
     name: String!
     description: String!
-    createdBy: User!
     dateUpdated: String!
     candidates: [Candidate!]!
     status: ElectionStatus!

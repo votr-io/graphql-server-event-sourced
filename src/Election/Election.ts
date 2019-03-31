@@ -1,9 +1,13 @@
 import { Election } from './types';
 import { Events } from './events';
+import { WithoutId } from './EventStore';
 
 export function projectElection(
   events: Events[],
-  init: Partial<Election> = {}
+  init: Partial<Election> = {
+    candidates: [],
+    statusTransitions: [],
+  }
 ): Election {
   let election = init;
 

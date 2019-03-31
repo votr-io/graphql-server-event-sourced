@@ -1,13 +1,25 @@
 import { Context } from '../../context';
 import { Election } from '../types';
 import lodash = require('lodash');
-import { ElectionForm, Handler } from '../service';
 import { ElectionCreated } from '../events';
-import { WithoutId, getElection } from '../EventStore';
+import { WithoutId } from '../EventStore';
+import { Handler, useHandler } from '../../lib/handler';
 
 const uuid = require('uuid/v4');
 
-export const createElectionHandler: Handler<
+export interface ElectionForm {
+  name: string;
+  description?: string;
+  candidates: CandidateForm[];
+}
+
+export interface CandidateForm {
+  id?: string;
+  name: string;
+  description?: string;
+}
+
+const createElectionHandler: Handler<
   Context,
   {
     electionForm: ElectionForm;
@@ -48,7 +60,7 @@ export const createElectionHandler: Handler<
     };
 
     await eventStore.create(event);
-    return await getElection(id);
+    return await eventStore.getElection(id);
   },
 };
 
@@ -91,3 +103,5 @@ function validate(input: { electionForm: ElectionForm; email: string }) {
   }
   return null;
 }
+
+export default useHandler(createElectionHandler);

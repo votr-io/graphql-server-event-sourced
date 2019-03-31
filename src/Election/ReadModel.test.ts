@@ -1,5 +1,5 @@
 import { Events } from './events';
-import { project, inMemoryElections } from './ReadModel';
+import { project, inMemoryReadModel } from './ReadModel';
 import { from } from 'rxjs';
 const uuid = require('uuid/v4');
 
@@ -63,6 +63,6 @@ const events: Events[] = [
 
 test('simple single election', () => {
   project(from(events));
-  expect(inMemoryElections[id].name).toBe('the name has been updated');
-  expect(inMemoryElections[id].status).toBe('OPEN');
+  expect(inMemoryReadModel[id].name).toBe('the name has been updated');
+  expect(inMemoryReadModel[id].status).toBe('OPEN');
 });

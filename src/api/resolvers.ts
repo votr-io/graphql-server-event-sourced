@@ -1,34 +1,51 @@
-import { UserInputError } from 'apollo-server-core';
-
 import { Context } from '../context';
 
 import lodash = require('lodash');
-import { inMemoryElections } from '../Election/ReadModel';
 
 import * as tokens from '../User/tokens';
-import { createBallot } from '../Ballot/store';
 
-export const resolvers = {
+import createElection from '../Election/handlers/createElection';
+import { IResolvers } from './generated/resolvers';
+import updateElection from '../Election/handlers/updateElection';
+import castBallot from '../Ballot/handlers/castBallot';
+import startElection from '../Election/handlers/startElection';
+import stopElection from '../Election/handlers/stopElection';
+
+export const resolvers: IResolvers<Context> = {
   Query: {
-    getElections: async (_, { input }, ctx) => {
-      const { ids } = input;
-      const elections = ids.map(id => inMemoryElections[id]);
+    getElections: async (_, { input }, ctx: Context) => {
+      const elections = input.ids.map(id => ctx.readModel[id]);
+
       return { elections };
+    },
+  },
+  Election: {
+    candidates: (election, _, ctx) => {
+      function shouldShuffle() {
+        return (
+          election.status === 'OPEN' &&
+          ctx.claims &&
+          ctx.claims.userId === election.createdBy
+        );
+      }
+
+      //shuffle candidates to prevent order from causing any bias during voting
+      return shouldShuffle() ? shuffle(election.candidates) : election.candidates;
     },
   },
   CreateElectionResponse: {
     adminToken: ({ election }) => {
       //TODO: this may go away once we are actually emailing people
       return tokens.encryptAdminToken({
-        userId: election.created_by,
+        userId: election.createdBy,
         electionId: election.id,
       });
     },
   },
   Mutation: {
-    createElection: async (_, { input }, ctx) => {
+    createElection: async (_, { input }, ctx: Context) => {
       const { email } = input;
-      const election = await ctx.electionService.createElection(ctx, {
+      const election = await createElection(ctx, {
         electionForm: input,
         email,
       });
@@ -36,33 +53,28 @@ export const resolvers = {
       return { election };
     },
 
-    updateElection: async (_, args, ctx) => {
-      const { electionId, name, description, candidates } = args.input;
-
-      const election = await ctx.electionService.updateElection(ctx, {
-        id: electionId,
-        name,
-        description,
-        candidates,
+    updateElection: async (_, { input }, ctx) => {
+      const election = await updateElection(ctx, {
+        id: input.electionId,
+        ...input,
       });
       return { election };
     },
 
     deleteElections: async (_, { input }, ctx) => {
-      const { ids } = input;
-      await ctx.electionService.deleteElections(ctx, ids);
-      return true;
+      throw new Error('not implimented');
     },
 
-    // startElection: async (_, { input }, ctx) => {
-    //   const { electionId, status } = input;
-    //   const election = await ctx.electionService.setStatus(ctx, {
-    //     id: electionId,
-    //     status,
-    //   });
+    startElection: async (_, { input }, ctx) => {
+      const election = await startElection(ctx, { id: input.electionId });
+      return { election };
+    },
 
-    //   return { election };
-    // },
+    stopElection: async (_, { input }, ctx) => {
+      const election = await stopElection(ctx, { id: input.electionId });
+      return { election };
+    },
+
     weakLogin: async (_, args: { input: { adminToken: string } }, ctx) => {
       const { adminToken } = args.input;
 
@@ -78,35 +90,9 @@ export const resolvers = {
 
       return { accessToken: tokens.sign({ userId, electionId }) };
     },
-    castBallot: async (_, args, ctx) => {
-      const { electionId, candidateIds } = args.input;
-      if (candidateIds.length === 0) {
-        throw new UserInputError(`why don't you try standing for something`);
-      }
-      const election = ctx.inMemoryElections[electionId];
-      if (election.status === 'PENDING') {
-        throw new UserInputError(`can't vote in an election that hasn't started yet`);
-      } else if (election.status !== 'OPEN') {
-        throw new UserInputError(`can't vote in an election that is closed`);
-      }
-      const bogusCandidates = candidateIds.filter(
-        id => !election.candidates.map(candidate => candidate.id).includes(id)
-      );
-      if (bogusCandidates.length !== 0) {
-        throw new UserInputError(
-          `the following candidates are not in this election: ${bogusCandidates.join(
-            ', '
-          )}`
-        );
-      }
-      const candidateIdToIndex = election.candidates.reduce((acc, { id }, i) => {
-        acc[id] = i;
-        return acc;
-      }, {});
-      await createBallot({
-        electionId,
-        candidateIndexes: candidateIds.map(id => candidateIdToIndex[id]),
-      });
+
+    castBallot: async (_, { input }, ctx) => {
+      await castBallot(ctx, input);
       return true;
     },
   },

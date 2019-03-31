@@ -7,7 +7,7 @@ import { projectElection } from './Election';
 
 export type ReadModel = Record<string, Election>;
 
-export const inMemoryElections: ReadModel = {};
+export const inMemoryReadModel: ReadModel = {};
 let lastEvent = 0;
 
 export async function waitForEvent(id: number): Promise<void> {
@@ -24,9 +24,9 @@ export function project(event$: Observable<Events>) {
       tap(event => {
         lastEvent = event.id;
         console.log(`[${event.id}] [${event.event_type}] projecting...`);
-        inMemoryElections[event.aggregate_id] = projectElection(
+        inMemoryReadModel[event.aggregate_id] = projectElection(
           [event],
-          inMemoryElections[event.aggregate_id]
+          inMemoryReadModel[event.aggregate_id]
         );
       })
     )

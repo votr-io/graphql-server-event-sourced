@@ -6,6 +6,11 @@ import { typeDefs } from './api/typeDefs';
 import { resolvers } from './api/resolvers';
 
 import { context } from './context';
+import { project } from './Election/ReadModel';
+import { postgresEventStore } from './Election/EventStore';
+
+//project into the in memory read model as soon as we start up
+project(postgresEventStore.stream());
 
 const app = express();
 app.use(cors());
