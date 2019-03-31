@@ -1,4 +1,4 @@
-import { Candidate } from './types';
+import { Candidate, Results } from './types';
 import { Event } from './EventStore';
 
 export interface ElectionCreated extends Event {
@@ -55,10 +55,19 @@ export interface ElectionStopped extends Event {
   };
 }
 
+export interface VotesCounted extends Event {
+  event_type: 'votes_counted';
+  aggregate_type: 'election';
+  data: {
+    results: Results;
+  };
+}
+
 export type Events =
   | ElectionCreated
   | ElectionNameChanged
   | ElectionDescriptionChanged
   | ElectionCandidatesChanged
   | ElectionStarted
-  | ElectionStopped;
+  | ElectionStopped
+  | VotesCounted;

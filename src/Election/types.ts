@@ -18,7 +18,7 @@ export interface Candidate {
 }
 
 export interface Results {
-  winner: Candidate;
+  winner: string;
   replay: {
     candidateTotals: CandidateVotes[];
     redistribution: CandidateVotes[];
@@ -28,6 +28,6 @@ export interface Results {
 export type ElectionStatus = 'PENDING' | 'OPEN' | 'CLOSED';
 
 export interface CandidateVotes {
-  candidate: Candidate;
+  candidateId: String;
   votes: number;
 }
