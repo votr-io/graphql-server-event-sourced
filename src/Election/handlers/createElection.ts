@@ -7,13 +7,13 @@ import { Handler, useHandler } from '../../lib/handler';
 
 const uuid = require('uuid/v4');
 
-export interface ElectionForm {
+interface ElectionForm {
   name: string;
   description?: string;
   candidates: CandidateForm[];
 }
 
-export interface CandidateForm {
+interface CandidateForm {
   id?: string;
   name: string;
   description?: string;

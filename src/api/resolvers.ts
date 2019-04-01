@@ -10,6 +10,7 @@ import updateElection from '../Election/handlers/updateElection';
 import castBallot from '../Ballot/handlers/castBallot';
 import startElection from '../Election/handlers/startElection';
 import stopElection from '../Election/handlers/stopElection';
+import { Candidate } from '../Election/types';
 
 export const resolvers: IResolvers<Context> = {
   Query: {
@@ -31,6 +32,32 @@ export const resolvers: IResolvers<Context> = {
 
       //shuffle candidates to prevent order from causing any bias during voting
       return shouldShuffle() ? shuffle(election.candidates) : election.candidates;
+    },
+    results: ({ results, candidates }) => {
+      if (!results) return undefined;
+      //helper function to resolve votes by candidate_id into fully formed Candidates
+      //doing this here rather than it's own resolver because we need the Candidates[] off the election
+      function resolveCandidateVotes(
+        candidateTotals: { candidateId: string; votes: number }[],
+        candidates: Candidate[]
+      ) {
+        return candidateTotals.map(({ candidateId, votes }) => ({
+          candidate: candidates.find(({ id }) => id === candidateId),
+          votes,
+        }));
+      }
+
+      return {
+        winner: candidates.find(({ id }) => id === results.winner),
+        replay: results.replay.map(({ candidateTotals, redistribution }) => {
+          return {
+            candidateTotals: resolveCandidateVotes(candidateTotals, candidates),
+            redistribution: redistribution
+              ? resolveCandidateVotes(redistribution, candidates)
+              : undefined,
+          };
+        }),
+      };
     },
   },
   CreateElectionResponse: {

@@ -1,0 +1,25 @@
+query GetElections($ids: [ID!]!) {
+  getElections(input: { ids: $ids }) {
+    elections {
+      id
+      name
+      description
+      candidates {
+        id
+        name
+        description
+      }
+      status
+      statusTransitions {
+        on
+        status
+      }
+      results {
+        winner {
+          id
+          name
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,3 @@
+mutation CastBallot($electionId: ID!, $candidateIds: [ID!]!) {
+  castBallot(input: { electionId: $electionId, candidateIds: $candidateIds })
+}

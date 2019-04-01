@@ -1,0 +1,25 @@
+mutation StartElection($electionId: ID!) {
+  startElection(input: { electionId: $electionId }) {
+    election {
+      id
+      name
+      description
+      candidates {
+        id
+        name
+        description
+      }
+      status
+      statusTransitions {
+        on
+        status
+      }
+      results {
+        winner {
+          id
+          name
+        }
+      }
+    }
+  }
+}

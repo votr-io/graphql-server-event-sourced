@@ -29,18 +29,22 @@ export function projectElection(
           ],
         };
         break;
+
       case 'election_name_changed':
         election.dateUpdated = date_created;
         election.name = event.data.name;
         break;
+
       case 'election_description_changed':
         election.dateUpdated = date_created;
         election.description = event.data.description;
         break;
+
       case 'election_candidates_changed':
         election.dateUpdated = date_created;
         election.candidates = event.data.candidates;
         break;
+
       case 'election_started':
         election.dateUpdated = date_created;
         election.status = 'OPEN';
@@ -49,6 +53,7 @@ export function projectElection(
           status: 'OPEN',
         });
         break;
+
       case 'election_stopped':
         election.dateUpdated = date_created;
         election.status = 'CLOSED';
@@ -56,7 +61,10 @@ export function projectElection(
           on: date_created,
           status: 'CLOSED',
         });
+        break;
 
+      case 'votes_counted':
+        election.results = event.data.results;
         break;
     }
   });
