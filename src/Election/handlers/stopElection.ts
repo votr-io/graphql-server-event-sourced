@@ -3,7 +3,6 @@ import { Election, Results } from '../types';
 import { Handler, useHandler } from '../../lib/handler';
 import { getElectionAndCheckPermissionsToUpdate, authenticate } from './common';
 import { UserInputError } from 'apollo-server';
-import { tallyElection } from '../tallyElection';
 import countVotes from '../../Ballot/handlers/countVotes';
 import { ElectionResults } from 'alt-vote';
 

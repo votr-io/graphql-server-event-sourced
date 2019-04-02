@@ -35,7 +35,7 @@ export const resolvers: IResolvers<Context> = {
     },
     results: ({ results, candidates }) => {
       if (!results) return undefined;
-      //helper function to resolve votes by candidate_id into fully formed Candidates
+      //helper function to resolve votes by candidateId into fully formed Candidates
       //doing this here rather than it's own resolver because we need the Candidates[] off the election
       function resolveCandidateVotes(
         candidateTotals: { candidateId: string; votes: number }[],
@@ -103,6 +103,7 @@ export const resolvers: IResolvers<Context> = {
     },
 
     weakLogin: async (_, args: { input: { adminToken: string } }, ctx) => {
+      //not sure where this logic belongs - may want to make authentication handlers eventually
       const { adminToken } = args.input;
 
       const { userId, electionId } = tokens.descryptAdminToken(adminToken);

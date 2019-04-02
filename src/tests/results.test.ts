@@ -11,7 +11,7 @@ test(`results`, async () => {
   }
   await service.StopElection({ electionId });
   const electionWithResults = await service.GetElections({ ids: [electionId] });
-  console.log(electionWithResults);
+  console.log(electionWithResults.data.getElections.elections[0]);
   expect(electionWithResults.data.getElections.elections[0].results.winner.id).toBe(
     candidateIds[0]
   );

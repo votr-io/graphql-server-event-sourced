@@ -1,4 +1,3 @@
-import { ElectionStatus } from './generated/globalTypes';
 import { makePublicElection } from './createElection.test';
 const uuidv4 = require('uuid/v4');
 import * as _ from 'lodash';
