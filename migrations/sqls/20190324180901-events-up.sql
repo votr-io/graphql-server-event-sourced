@@ -34,7 +34,6 @@ CREATE TRIGGER notify_new_event
 
 
 -- table for users
-
 CREATE TYPE user_type AS ENUM ('WEAK');
 
 CREATE TABLE users (
@@ -46,7 +45,6 @@ CREATE TABLE users (
 
 
 --table for ballots
-
 CREATE TABLE ballots (
     election_id UUID NOT NULL,
     ballot VARCHAR (800) NOT NULL

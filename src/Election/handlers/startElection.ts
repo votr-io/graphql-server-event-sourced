@@ -14,6 +14,7 @@ const handler: Handler<
   authenticate,
   validate,
   handleRequest: async (ctx, { id }) => {
+    
     const election = await getElectionAndCheckPermissionsToUpdate(ctx, id);
 
     if (election.status === 'OPEN') {

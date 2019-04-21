@@ -82,7 +82,7 @@ export const resolvers: IResolvers<Context> = {
 
     updateElection: async (_, { input }, ctx) => {
       const election = await updateElection(ctx, {
-        id: input.electionId,
+        id: input.id,
         ...input,
       });
       return { election };
@@ -93,12 +93,12 @@ export const resolvers: IResolvers<Context> = {
     },
 
     startElection: async (_, { input }, ctx) => {
-      const election = await startElection(ctx, { id: input.electionId });
+      const election = await startElection(ctx, { id: input.id });
       return { election };
     },
 
     stopElection: async (_, { input }, ctx) => {
-      const election = await stopElection(ctx, { id: input.electionId });
+      const election = await stopElection(ctx, { id: input.id });
       return { election };
     },
 

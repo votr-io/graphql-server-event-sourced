@@ -32,7 +32,7 @@ testCases.forEach(({ testName, name, description, candidates }) => {
     const ogCandidates = election.candidates;
 
     const { data } = await service.UpdateElection({
-      electionId,
+      id: electionId,
       name,
       description,
       candidates,
@@ -53,8 +53,8 @@ testCases.forEach(({ testName, name, description, candidates }) => {
 
 test(`update election - invalid election status`, async () => {
   const { election, service } = await makePublicElection();
-  const electionId = election.id;
+  const { id } = election;
 
-  await service.StartElection({ electionId });
-  await expect(service.UpdateElection({ electionId })).rejects.toThrow();
+  await service.StartElection({ id });
+  await expect(service.UpdateElection({ id })).rejects.toThrow();
 });

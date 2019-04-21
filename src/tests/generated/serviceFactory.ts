@@ -104,10 +104,10 @@ export function createService(client: ApolloClient<any>) {
   
   export const GetElectionsQuery = gql`query GetElections($ids:[ID!]!){getElections(input:{ids:$ids}){__typename elections{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}`
   
-  export const StartElectionMutation = gql`mutation StartElection($electionId:ID!){startElection(input:{electionId:$electionId}){__typename election{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}`
+  export const StartElectionMutation = gql`mutation StartElection($id:ID!){startElection(input:{id:$id}){__typename election{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}`
   
-  export const StopElectionMutation = gql`mutation StopElection($electionId:ID!){stopElection(input:{electionId:$electionId}){__typename election{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}`
+  export const StopElectionMutation = gql`mutation StopElection($id:ID!){stopElection(input:{id:$id}){__typename election{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}`
   
-  export const UpdateElectionMutation = gql`mutation UpdateElection($candidates:[CreateCandidateInput!],$description:String,$electionId:ID!,$name:String){updateElection(input:{electionId:$electionId,name:$name,description:$description,candidates:$candidates}){__typename election{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}`
+  export const UpdateElectionMutation = gql`mutation UpdateElection($candidates:[CreateCandidateInput!],$description:String,$id:ID!,$name:String){updateElection(input:{id:$id,name:$name,description:$description,candidates:$candidates}){__typename election{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}`
   
   export const WeakLoginMutation = gql`mutation WeakLogin($adminToken:String!){weakLogin(input:{adminToken:$adminToken}){__typename accessToken}}`

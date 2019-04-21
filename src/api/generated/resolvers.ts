@@ -27,7 +27,7 @@ export interface DeleteElectionsRequest {
 }
 /** updateElection is used to modify an election when it is in the PENDING status. Once an election has entered any other status, it's configuration is frozen. TODO: add properties here like public/private, manual/scheduled start/end dates */
 export interface UpdateElectionRequest {
-  electionId: string;
+  id: string;
 
   name?: Maybe<string>;
 
@@ -37,11 +37,11 @@ export interface UpdateElectionRequest {
 }
 
 export interface StartElectionRequest {
-  electionId: string;
+  id: string;
 }
 
 export interface StopElectionRequest {
-  electionId: string;
+  id: string;
 }
 
 export interface WeakLoginRequest {

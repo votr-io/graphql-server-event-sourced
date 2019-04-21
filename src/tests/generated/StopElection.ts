@@ -53,5 +53,5 @@ export interface StopElection {
 }
 
 export interface StopElectionVariables {
-  electionId: string;
+  id: string;
 }

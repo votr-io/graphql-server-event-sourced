@@ -53,5 +53,5 @@ export interface StartElection {
 }
 
 export interface StartElectionVariables {
-  electionId: string;
+  id: string;
 }

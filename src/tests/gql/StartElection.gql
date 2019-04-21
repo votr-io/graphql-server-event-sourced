@@ -1,5 +1,5 @@
-mutation StartElection($electionId: ID!) {
-  startElection(input: { electionId: $electionId }) {
+mutation StartElection($id: ID!) {
+  startElection(input: { id: $id }) {
     election {
       id
       name

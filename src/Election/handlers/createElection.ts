@@ -90,7 +90,7 @@ function validate(input: { electionForm: ElectionForm; email: string }) {
       .filter(({ id }) => id != null)
       .value().length
   ) {
-    errors.push('candidates cannot have duplicate ods');
+    errors.push('candidates cannot have duplicate ids');
   }
   if (
     lodash.uniqBy(candidates, ({ name }) => name.toLowerCase()).length !=

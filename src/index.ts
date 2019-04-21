@@ -9,6 +9,20 @@ import { context } from './context';
 import { project } from './Election/ReadModel';
 import { postgresEventStore } from './Election/EventStore';
 
+//@ts-ignore
+import * as lodash from 'lodash';
+
+console.log('hi');
+
+const someObject = {
+  test: '123',
+};
+console.log(someObject.hasOwnProperty('test'));
+
+const otherObject = Object.create(someObject);
+const betterObject = lodash.assign({}, otherObject);
+console.log(betterObject.hasOwnProperty());
+
 //project into the in memory read model as soon as we start up
 project(postgresEventStore.stream());
 
@@ -21,7 +35,7 @@ app.use('/healthy', (req, res) => {
 
 export const server = new ApolloServer({
   typeDefs,
-  //@ts-ignore
+  //@ts-ignore = the types in generated code don't align exactly with apollo server types
   resolvers,
   context,
   introspection: true,

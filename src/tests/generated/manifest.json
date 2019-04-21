@@ -23,24 +23,24 @@
       }
     },
     {
-      "signature": "94755c76ca5990c58ce72bdbb01a6afe74c9b3451bfdab1aae8f5fcb1779fc24",
-      "document": "mutation StartElection($electionId:ID!){startElection(input:{electionId:$electionId}){__typename election{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}",
+      "signature": "ad3fd2adcf9b8ac2e89f405ed523a6d4e4d0932e8f97eee1486ea39e9257bf69",
+      "document": "mutation StartElection($id:ID!){startElection(input:{id:$id}){__typename election{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}",
       "metadata": {
-        "engineSignature": "mutation StartElection($electionId:ID!){startElection(input:{}){__typename election{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}"
+        "engineSignature": "mutation StartElection($id:ID!){startElection(input:{}){__typename election{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}"
       }
     },
     {
-      "signature": "05b33763dd8123b0336adeb7620bc65050a906903f2a55f041640a277ab4af68",
-      "document": "mutation StopElection($electionId:ID!){stopElection(input:{electionId:$electionId}){__typename election{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}",
+      "signature": "5dfb79ea4df99f7de2a237ea4552871959db525991561f03b43664940bd6ed9f",
+      "document": "mutation StopElection($id:ID!){stopElection(input:{id:$id}){__typename election{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}",
       "metadata": {
-        "engineSignature": "mutation StopElection($electionId:ID!){stopElection(input:{}){__typename election{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}"
+        "engineSignature": "mutation StopElection($id:ID!){stopElection(input:{}){__typename election{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}"
       }
     },
     {
-      "signature": "fe20dc9c4ddc5deef778be928176759a5f84c91c11d85439abd31e936e16a332",
-      "document": "mutation UpdateElection($candidates:[CreateCandidateInput!],$description:String,$electionId:ID!,$name:String){updateElection(input:{electionId:$electionId,name:$name,description:$description,candidates:$candidates}){__typename election{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}",
+      "signature": "7ff76825a2e81bf81aa046930e4187e326eb39fb8b7e5e75759ea11c705d2182",
+      "document": "mutation UpdateElection($candidates:[CreateCandidateInput!],$description:String,$id:ID!,$name:String){updateElection(input:{id:$id,name:$name,description:$description,candidates:$candidates}){__typename election{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}",
       "metadata": {
-        "engineSignature": "mutation UpdateElection($candidates:[CreateCandidateInput!],$description:String,$electionId:ID!,$name:String){updateElection(input:{}){__typename election{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}"
+        "engineSignature": "mutation UpdateElection($candidates:[CreateCandidateInput!],$description:String,$id:ID!,$name:String){updateElection(input:{}){__typename election{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}"
       }
     },
     {

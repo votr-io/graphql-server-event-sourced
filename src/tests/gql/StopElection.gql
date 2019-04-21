@@ -1,5 +1,5 @@
-mutation StopElection($electionId: ID!) {
-  stopElection(input: { electionId: $electionId }) {
+mutation StopElection($id: ID!) {
+  stopElection(input: { id: $id }) {
     election {
       id
       name

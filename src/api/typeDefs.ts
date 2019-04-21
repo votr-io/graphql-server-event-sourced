@@ -52,7 +52,7 @@ export const typeDefs = gql`
   TODO: add properties here like public/private, manual/scheduled start/end dates
   """
   input UpdateElectionRequest {
-    electionId: ID!
+    id: ID!
     name: String
     description: String
     candidates: [CreateCandidateInput!]
@@ -78,14 +78,14 @@ export const typeDefs = gql`
   }
 
   input StartElectionRequest {
-    electionId: ID!
+    id: ID!
   }
   type StartElectionResponse {
     election: Election!
   }
 
   input StopElectionRequest {
-    electionId: ID!
+    id: ID!
   }
   type StopElectionResponse {
     election: Election!

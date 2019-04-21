@@ -12,22 +12,22 @@ test(`cast ballot -  election pending`, async () => {
 
 test(`cast ballot - election tallying`, async () => {
   const { election, service } = await makePublicElection();
-  const electionId = election.id;
+  const { id } = election;
   const candidateIds = election.candidates.map(({ id }) => id);
 
-  await service.StartElection({ electionId });
-  await service.StopElection({ electionId });
-  await expect(service.CastBallot({ electionId, candidateIds })).rejects.toThrow();
+  await service.StartElection({ id });
+  await service.StopElection({ id });
+  await expect(service.CastBallot({ electionId: id, candidateIds })).rejects.toThrow();
 });
 
 test(`cast ballot - candidates not on election`, async () => {
   const { election, service } = await makePublicElection();
-  const electionId = election.id;
+  const { id } = election;
   const candidateIds = election.candidates.map(({ id }) => id);
 
-  await service.StartElection({ electionId });
+  await service.StartElection({ id });
   candidateIds.push(uuidv4());
-  await expect(service.CastBallot({ electionId, candidateIds })).rejects.toThrow();
+  await expect(service.CastBallot({ electionId: id, candidateIds })).rejects.toThrow();
 });
 
 test(`cast ballot - no candidates`, async () => {
@@ -35,7 +35,7 @@ test(`cast ballot - no candidates`, async () => {
   const electionId = election.id;
   const candidateIds = election.candidates.map(({ id }) => id);
 
-  await service.StartElection({ electionId });
+  await service.StartElection({ id: electionId });
   candidateIds.push(uuidv4());
   await expect(service.CastBallot({ electionId, candidateIds: [] })).rejects.toThrow();
 });
@@ -45,7 +45,7 @@ test(`ballot with all the candidates`, async () => {
   const electionId = election.id;
   const candidateIds = election.candidates.map(({ id }) => id);
 
-  await service.StartElection({ electionId });
+  await service.StartElection({ id: electionId });
   await service.CastBallot({ electionId, candidateIds });
 });
 
@@ -54,7 +54,7 @@ test(`ballot with all one candidate`, async () => {
   const electionId = election.id;
   const candidateIds = election.candidates.map(({ id }) => id);
 
-  await service.StartElection({ electionId });
+  await service.StartElection({ id: electionId });
   await service.CastBallot({ electionId, candidateIds: [candidateIds[0]] });
 });
 
@@ -63,7 +63,7 @@ test(`multiple ballots can be cast per election`, async () => {
   const electionId = election.id;
   const candidateIds = election.candidates.map(({ id }) => id);
 
-  await service.StartElection({ electionId });
+  await service.StartElection({ id: electionId });
 
   for (let i = 0; i < 10; i++) {
     await service.CastBallot({ electionId, candidateIds: shuffle(candidateIds) });

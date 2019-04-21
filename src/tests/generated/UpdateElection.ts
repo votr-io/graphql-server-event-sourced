@@ -53,7 +53,7 @@ export interface UpdateElection {
 }
 
 export interface UpdateElectionVariables {
-  electionId: string;
+  id: string;
   name?: string | null;
   description?: string | null;
   candidates?: CreateCandidateInput[] | null;

@@ -1,16 +1,11 @@
 mutation UpdateElection(
-  $electionId: ID!
+  $id: ID!
   $name: String
   $description: String
   $candidates: [CreateCandidateInput!]
 ) {
   updateElection(
-    input: {
-      electionId: $electionId
-      name: $name
-      description: $description
-      candidates: $candidates
-    }
+    input: { id: $id, name: $name, description: $description, candidates: $candidates }
   ) {
     election {
       id
