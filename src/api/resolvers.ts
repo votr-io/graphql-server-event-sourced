@@ -14,6 +14,11 @@ import { Candidate } from '../Election/types';
 
 export const resolvers: IResolvers<Context> = {
   Query: {
+    listElections: async (_, __, ctx: Context) => {
+      const elections = lodash.values(ctx.readModel);
+
+      return { elections };
+    },
     getElections: async (_, { input }, ctx: Context) => {
       const elections = input.ids.map(id => ctx.readModel[id]);
 

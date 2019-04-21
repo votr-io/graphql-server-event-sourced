@@ -1,0 +1,25 @@
+query ListElections {
+  listElections(input: {}) {
+    elections {
+      id
+      name
+      description
+      candidates {
+        id
+        name
+        description
+      }
+      status
+      statusTransitions {
+        on
+        status
+      }
+      results {
+        winner {
+          id
+          name
+        }
+      }
+    }
+  }
+}

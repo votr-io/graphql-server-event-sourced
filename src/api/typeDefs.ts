@@ -2,6 +2,7 @@ import { gql } from 'apollo-server-core';
 
 export const typeDefs = gql`
   type Query {
+    listElections(input: ListElectionsRequest!): ListElectionsResponse!
     getElections(input: GetElectionsRequest!): GetElectionsResponse!
   }
   type Mutation {
@@ -17,6 +18,13 @@ export const typeDefs = gql`
     castBallot(input: SubmitBallotRequest!): Boolean!
     #addRegistrations (this should probably be allowed in both PENDING and ACTIVE)
     #removeRegistrations (this should probably be allowed only in PENDING)
+  }
+
+  input ListElectionsRequest {
+    _: Boolean
+  }
+  type ListElectionsResponse {
+    elections: [Election!]!
   }
 
   input GetElectionsRequest {

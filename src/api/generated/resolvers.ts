@@ -1,5 +1,9 @@
 export type Maybe<T> = T | null;
 
+export interface ListElectionsRequest {
+  _?: Maybe<boolean>;
+}
+
 export interface GetElectionsRequest {
   ids: string[];
 }
@@ -90,10 +94,12 @@ export type Upload = any;
 // ====================================================
 
 export interface Query {
+  listElections: ListElectionsResponse;
+
   getElections: GetElectionsResponse;
 }
 
-export interface GetElectionsResponse {
+export interface ListElectionsResponse {
   elections: Election[];
 }
 
@@ -153,6 +159,10 @@ export interface CandidateVotes {
   votes: number;
 }
 
+export interface GetElectionsResponse {
+  elections: Election[];
+}
+
 export interface Mutation {
   createElection: CreateElectionResponse;
 
@@ -209,6 +219,9 @@ export interface User {
 // Arguments
 // ====================================================
 
+export interface ListElectionsQueryArgs {
+  input: ListElectionsRequest;
+}
 export interface GetElectionsQueryArgs {
   input: GetElectionsRequest;
 }
@@ -282,7 +295,18 @@ export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
 
 export namespace QueryResolvers {
   export interface Resolvers<Context = {}, TypeParent = {}> {
+    listElections?: ListElectionsResolver<ListElectionsResponse, TypeParent, Context>;
+
     getElections?: GetElectionsResolver<GetElectionsResponse, TypeParent, Context>;
+  }
+
+  export type ListElectionsResolver<
+    R = ListElectionsResponse,
+    Parent = {},
+    Context = {}
+  > = Resolver<R, Parent, Context, ListElectionsArgs>;
+  export interface ListElectionsArgs {
+    input: ListElectionsRequest;
   }
 
   export type GetElectionsResolver<
@@ -295,14 +319,14 @@ export namespace QueryResolvers {
   }
 }
 
-export namespace GetElectionsResponseResolvers {
-  export interface Resolvers<Context = {}, TypeParent = GetElectionsResponse> {
+export namespace ListElectionsResponseResolvers {
+  export interface Resolvers<Context = {}, TypeParent = ListElectionsResponse> {
     elections?: ElectionsResolver<Election[], TypeParent, Context>;
   }
 
   export type ElectionsResolver<
     R = Election[],
-    Parent = GetElectionsResponse,
+    Parent = ListElectionsResponse,
     Context = {}
   > = Resolver<R, Parent, Context>;
 }
@@ -476,6 +500,18 @@ export namespace CandidateVotesResolvers {
     Parent,
     Context
   >;
+}
+
+export namespace GetElectionsResponseResolvers {
+  export interface Resolvers<Context = {}, TypeParent = GetElectionsResponse> {
+    elections?: ElectionsResolver<Election[], TypeParent, Context>;
+  }
+
+  export type ElectionsResolver<
+    R = Election[],
+    Parent = GetElectionsResponse,
+    Context = {}
+  > = Resolver<R, Parent, Context>;
 }
 
 export namespace MutationResolvers {
@@ -721,13 +757,14 @@ export interface UploadScalarConfig extends GraphQLScalarTypeConfig<Upload, any>
 
 export interface IResolvers<Context = {}> {
   Query?: QueryResolvers.Resolvers<Context>;
-  GetElectionsResponse?: GetElectionsResponseResolvers.Resolvers<Context>;
+  ListElectionsResponse?: ListElectionsResponseResolvers.Resolvers<Context>;
   Election?: ElectionResolvers.Resolvers<Context>;
   Candidate?: CandidateResolvers.Resolvers<Context>;
   ElectionStatusTransition?: ElectionStatusTransitionResolvers.Resolvers<Context>;
   Results?: ResultsResolvers.Resolvers<Context>;
   Round?: RoundResolvers.Resolvers<Context>;
   CandidateVotes?: CandidateVotesResolvers.Resolvers<Context>;
+  GetElectionsResponse?: GetElectionsResponseResolvers.Resolvers<Context>;
   Mutation?: MutationResolvers.Resolvers<Context>;
   CreateElectionResponse?: CreateElectionResponseResolvers.Resolvers<Context>;
   UpdateElectionResponse?: UpdateElectionResponseResolvers.Resolvers<Context>;

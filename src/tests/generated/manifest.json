@@ -23,6 +23,13 @@
       }
     },
     {
+      "signature": "3bc80322fd7b4d206e5787dfd7f946bf2139806a253338d13df4e83744f8f643",
+      "document": "query ListElections{listElections(input:{}){__typename elections{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}",
+      "metadata": {
+        "engineSignature": "query ListElections{listElections(input:{}){__typename elections{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}"
+      }
+    },
+    {
       "signature": "ad3fd2adcf9b8ac2e89f405ed523a6d4e4d0932e8f97eee1486ea39e9257bf69",
       "document": "mutation StartElection($id:ID!){startElection(input:{id:$id}){__typename election{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}",
       "metadata": {

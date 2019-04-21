@@ -6,6 +6,7 @@ import gql from 'graphql-tag';
 import { CastBallot, CastBallotVariables } from './CastBallot'
 import { CreateElection, CreateElectionVariables } from './CreateElection'
 import { GetElections, GetElectionsVariables } from './GetElections'
+import { ListElections } from './ListElections'
 import { StartElection, StartElectionVariables } from './StartElection'
 import { StopElection, StopElectionVariables } from './StopElection'
 import { UpdateElection, UpdateElectionVariables } from './UpdateElection'
@@ -42,6 +43,21 @@ export function createService(client: ApolloClient<any>) {
         ...options,
         query: GetElectionsQuery,
         variables
+      });
+    },
+
+    ListElections: ( options: Omit<QueryOptions, 'query' | 'variables'> = {}) => {
+      return client.query<ListElections>({
+        ...options,
+        query: ListElectionsQuery,
+        
+      });
+    },
+    watchListElections: ( options: Omit<QueryOptions, 'query' | 'variables'> = {}) => {
+      return client.watchQuery<ListElections>({
+        ...options,
+        query: ListElectionsQuery,
+        
       });
     },
 
@@ -103,6 +119,8 @@ export function createService(client: ApolloClient<any>) {
   export const CreateElectionMutation = gql`mutation CreateElection($candidates:[CreateCandidateInput!]!,$description:String!,$email:String,$name:String!){createElection(input:{name:$name,description:$description,candidates:$candidates,email:$email}){__typename adminToken election{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}`
   
   export const GetElectionsQuery = gql`query GetElections($ids:[ID!]!){getElections(input:{ids:$ids}){__typename elections{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}`
+  
+  export const ListElectionsQuery = gql`query ListElections{listElections(input:{}){__typename elections{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}`
   
   export const StartElectionMutation = gql`mutation StartElection($id:ID!){startElection(input:{id:$id}){__typename election{__typename candidates{__typename description id name}description id name results{__typename winner{__typename id name}}status statusTransitions{__typename on status}}}}`
   
