@@ -18,6 +18,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@sendgrid/mail": "^6.3.1",
     "@types/graphql": "^14.0.7",
     "@types/pg": "^7.4.12",
     "alt-vote": "0.0.2",

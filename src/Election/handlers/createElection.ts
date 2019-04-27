@@ -4,6 +4,7 @@ import lodash = require('lodash');
 import { ElectionCreated } from '../events';
 import { WithoutId } from '../EventStore';
 import { Handler, useHandler } from '../../lib/handler';
+import { sendNewElectionEmail } from '../../Email/emailer';
 
 const uuid = require('uuid/v4');
 
@@ -60,7 +61,13 @@ const createElectionHandler: Handler<
     };
 
     await eventStore.create(event);
-    return await eventStore.getElection(id);
+
+    const election = await eventStore.getElection(id);
+
+    //does it make sense to send the email here? probably should be based off the event stream
+    sendNewElectionEmail(email, election);
+
+    return election;
   },
 };
 

@@ -5,6 +5,7 @@ import { createHttpLink } from 'apollo-link-http';
 const fetch = require('node-fetch');
 
 const fetchWithToken = (token?: string) => {
+  console.log(token);
   return (uri, options) => {
     if (token) {
       options.headers['x-token'] = token;
